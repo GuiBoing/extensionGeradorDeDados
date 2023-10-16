@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+
+    function gerarCpf() {
+        const num1 = aleatorio();
+        const num2 = aleatorio();
+        const num3 = aleatorio();
+        const dig1 = dig(num1, num2, num3);
+        const dig2 = dig(num1, num2, num3, dig1);
+        document.getElementById("value-cpf").value = `${num1}.${num2}.${num3}-${dig1}${dig2}`;
+    }
+
+    function dig(n1, n2, n3, n4) {
+        const nums = n1.split("").concat(n2.split(""), n3.split(""));
+        if (n4 !== undefined) {
+            nums[9] = n4;
+        }
+
+        let x = 0;
+        for (let i = (n4 !== undefined ? 11 : 10), j = 0; i >= 2; i--, j++) {
+            x += parseInt(nums[j]) * i;
+        }
+
+        const y = x % 11;
+        return y < 2 ? 0 : 11 - y;
+    }
+
+    function aleatorio() {
+        const aleat = Math.floor(Math.random() * 999);
+        return ("" + aleat).padStart(3, '0');
+    }
+
+    function getUserData() {
+        $.ajax({
+            url: 'https://randomuser.me/api/?nat=br',
+            dataType: 'json',
+            error: function (data) {
+                console.error(
+                    "Uh oh, something has gone wrong.", data
+                )
+            },
+            success: function (data) {
+                valores = data.results[0]
+                console.log(valores)
+                document.getElementById('value-imagem').value = valores.picture.large
+                document.getElementById('value-nome-completo').value = `${valores.name.first} ${valores.name.last}`
+                // cpf
+                document.getElementById('value-genero').value = valores.gender === 'female' ? 'feminino' : 'masculino'
+                document.getElementById('value-email').value = valores.email
+                let dataOriginal = valores.dob.date;
+                let dataObjeto = new Date(dataOriginal);
+                let dia = dataObjeto.getUTCDate();
+                let mes = dataObjeto.getUTCMonth() + 1;
+                let ano = dataObjeto.getUTCFullYear();
+                let dataFormatada = `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${ano}`;
+                document.getElementById('value-data-nasc').value = dataFormatada;
+
+            }
+        });
+    }
+    function gerarData() {
+        gerarCpf();
+        getUserData();
+    }
+    function copyLine(id) {
+        navigator.clipboard.writeText(document.getElementsByTagName('tr')[id].getElementsByTagName('td')[0].getElementsByTagName('input')[0].value);
+    }
+</script>
+
+<body>
+    <button onclick="gerarData()">gerar</button>
+    <table class="tabela">
+        <tr>
+            <th><span class="head">imagem</span></th>
+            <td><input id="value-imagem"></td>
+            <td>
+                <button onclick="copyLine(0)">copy</button>
+            </td>
+        </tr>
+        <tr>
+            <th><span class="head">nome completo</span></th>
+            <td><input id="value-nome-completo"></td>
+            <td>
+                <button onclick="copyLine(1)">copy</button>
+            </td>
+        </tr>
+        <tr>
+            <th><span class="head">cpf</span></th>
+            <td><input id="value-cpf"></td>
+            <td>
+                <button onclick="copyLine(2)">copy</button>
+            </td>
+        </tr>
+        <tr>
+            <th><span class="head">genero</span></th>
+            <td><input id="value-genero"></td>
+            <td>
+                <button onclick="copyLine(3)">copy</button>
+            </td>
+        </tr>
+        <tr>
+            <th><span class="head">email</span></th>
+            <td><input id="value-email"></td>
+            <td>
+                <button onclick="copyLine(4)">copy</button>
+            </td>
+        </tr>
+        <tr>
+            <th><span class="head">data nasc</span></th>
+            <td><input id="value-data-nasc"></td>
+            <td>
+                <button onclick="copyLine(5)">copy</button>
+            </td>
+        </tr>
+        <tr>
+            <th><span class="head">CEP</span></th>
+            <td><input id="value-cep"></td>
+            <td>
+                <button onclick="copyLine(6)">copy</button>
+            </td>
+        </tr>
+        <tr>
+            <th><span class="head">estado</span></th>
+            <td><input id="value-estado"></td>
+            <td>
+                <button onclick="copyLine(7)">copy</button>
+            </td>
+        </tr>
+        <tr>
+            <th><span class="head">cidade</span></th>
+            <td><input id="value-cidade"></td>
+            <td>
+                <button onclick="copyLine(8)">copy</button>
+            </td>
+        </tr>
+        <tr>
+            <th><span class="head">rua</span></th>
+            <td><input id="value-rua"></td>
+            <td>
+                <button onclick="copyLine(9)">copy</button>
+            </td>
+        </tr>
+        <tr>
+            <th><span class="head">numero</span></th>
+            <td><input id="value-numero"></td>
+            <td>
+                <button onclick="copyLine(10)">copy</button>
+            </td>
+        </tr>
+        <tr>
+            <th><span class="head">numero</span></th>
+            <td><input id="value-numero"></td>
+            <td>
+                <button onclick="copyLine(11)">copy</button>
+            </td>
+        </tr>
+        <tr>
+            <th><span class="head">numero</span></th>
+            <td><input id="value-numero"></td>
+            <td>
+                <button onclick="copyLine(12)">copy</button>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
